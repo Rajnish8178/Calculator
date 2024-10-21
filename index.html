@@ -1,1 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Large Simple Calculator</title>
+   <style>
+   body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+.calculator {
+    background-color: #4a90e2;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 400px;
+}
+display {
+    background-color: #e8e8e8;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: right;
+    font-family: 'Digital', sans-serif;
+    font-size: 3em;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+button {
+    background-color: #3a7bd5;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 2em;
+    padding: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+button:hover {
+    background-color: #2d62a3;
+}
+button:active {
+    transform: scale(0.95);
+}
+.operator {
+    background-color: #2980b9;
+}
+.operator:hover {
+    background-color: #2171a6;
+}
 
+</style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display">0</div>
+        <div class="buttons">
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="operator">+</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button class="operator">-</button>
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button class="operator">=</button>
+        </div>
+    </div>
+    <script>
+        const display = document.querySelector('.display');
+        const buttons = document.querySelectorAll('button');
+        let currentValue = '0';
+        let previousValue = null;
+        let operation = null;
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const value = button.textContent;
+                if (!isNaN(value) || value === '.') {
+                    inputNumber(value);
+                } else {
+                    handleOperator(value);
+                }
+                updateDisplay();
+            });
+        });
+
+        function inputNumber(num) {
+            if (currentValue === '0' || currentValue === '-0') {
+                currentValue = num;
+            } else {
+                currentValue += num;
+            }
+        }
+
+        function handleOperator(op) {
+            if (op === '=') {
+                calculate();
+            } else {
+                if (previousValue !== null) {
+                    calculate();
+                }
+                previousValue = currentValue;
+                operation = op;
+                currentValue = '0';
+            }
+        }
+
+        function calculate() {
+            if (previousValue === null || operation === null) return;
+            let result;
+            const prev = parseFloat(previousValue);
+            const current = parseFloat(currentValue);
+            switch (operation) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                default:
+                    return;
+            }
+            currentValue = result.toString();
+            operation = null;
+            previousValue = null;
+        }
+
+        function updateDisplay() {
+            display.textContent = currentValue;
+        }
+    </script>
+</body>
+</html>
